@@ -1,3 +1,3 @@
 #!/bin/bash
 
-docker image build --build-arg UID=$(id -u) --tag minecraft .
+docker image build --build-arg UID=$(id -u) --tag minecraft $(dirname ${0})
