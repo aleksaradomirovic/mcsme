@@ -6,12 +6,13 @@ move server files from a /tmp filesystem to and from a server directory.
 
 Usage:
 
-./run_server SERVER_NAME
+./run_server [-p/--port HOST_PORT] SERVER_NAME
 
 SERVER_NAME corresponds to the name of the folder in the server directory you
-want to run. The server directory is currently restricted to ./servers in the
-repo's root directory.
+want to run.
 
+HOST_PORT is in case you want to expose the server on a different port than
+minecraft's default (25565).
 
 Before you can run server, you should build the docker image in ./docker, by
 running:

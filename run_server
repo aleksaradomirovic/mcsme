@@ -7,16 +7,34 @@
 # This script is licensed under the Mozilla Public License Version 2.0.
 # See LICENSE.txt for more information.
 
-if [[ -z ${1} ]]; then
-    echo "${0} error: no server folder given!"
+PORT=25565
+
+while [[ ${#} -gt 0 ]]; do
+    case ${1} in
+        -p|--port)
+            PORT=${2}
+            shift 2
+            ;;
+        * )
+            SAV=${1}
+            shift 1
+            ;;
+    esac
+done
+
+if [[ -z ${SAV} ]]; then
+    echo "No server folder declared"
     exit -1
 fi
 
-LOC=$(dirname ${0})
-SAV=${LOC}/servers/${1}
+echo "Running on host port ${PORT}..."
+echo "Loading server folder ${SAV}..."
+
 DIR=$(mktemp -d)
 
-if ! rsync -rtv ${SAV}/ ${DIR}; then
+echo "Using host temporary directory ${DIR}..."
+
+if ! rsync -rt ${SAV}/ ${DIR}; then
     rm -r ${DIR}
     exit -1
 fi
@@ -31,7 +49,7 @@ SERVER_JAR=$(realpath --relative-to=${DIR} ${SERVER_JAR})
 
 while true; do
     if ! docker container run --interactive --tty --rm \
-            --volume ${DIR}:/mnt/server --publish 25565:25565 \
+            --volume ${DIR}:/mnt/server --publish ${PORT}:25565 \
             --user minecraft --workdir /mnt/server \
             --name minecraft_${1} minecraft \
             java -Xmx12G -jar ${SERVER_JAR} --nogui; then
@@ -39,7 +57,7 @@ while true; do
         exit -1
     fi
 
-    rsync -rtuv ${DIR}/ ${SAV}
+    rsync -rtu ${DIR}/ ${SAV}
 
     echo
     read -p "Terminate? [y/N] " -t 15 USERCMD || { echo; continue; }
