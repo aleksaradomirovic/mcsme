@@ -30,6 +30,7 @@ fi
 echo "Running on host port ${PORT}..."
 echo "Loading server folder ${SAV}..."
 
+NAME=$(basename ${SAV})
 DIR=$(mktemp -d)
 
 echo "Using host temporary directory ${DIR}..."
@@ -51,7 +52,7 @@ while true; do
     if ! docker container run --interactive --tty --rm \
             --volume ${DIR}:/mnt/server --publish ${PORT}:25565 \
             --user minecraft --workdir /mnt/server \
-            --name minecraft_${1} minecraft \
+            --name minecraft_${NAME} minecraft \
             java -Xmx12G -jar ${SERVER_JAR} --nogui; then
         rm -r ${DIR}
         exit -1
