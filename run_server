@@ -30,7 +30,7 @@ fi
 echo "Running on host port ${PORT}..."
 echo "Loading server folder ${SAV}..."
 
-NAME=$(basename ${SAV})
+NAME=$(basename $(realpath ${SAV}))
 DIR=$(mktemp -d)
 
 echo "Using host temporary directory ${DIR}..."
@@ -48,10 +48,18 @@ fi
 SERVER_JAR=$(realpath --relative-to=${DIR} ${SERVER_JAR})
 #echo "${SERVER_JAR}"
 
+if [[ -z ${TZ} ]]; then
+    if [[ -f /etc/timezone ]]; then
+        TZ=$(cat /etc/timezone)
+    else
+        TZ=UTC
+    fi
+fi
+
 while true; do
     if ! docker container run --interactive --tty --rm \
             --volume ${DIR}:/mnt/server --publish ${PORT}:25565 \
-            --user minecraft --workdir /mnt/server \
+            --user minecraft --workdir /mnt/server --env TZ=${TZ} \
             --name minecraft_${NAME} minecraft \
             java -Xmx12G -jar ${SERVER_JAR} --nogui; then
         rm -r ${DIR}
