@@ -7,10 +7,6 @@ import mcserver
 
 logging.basicConfig(level=logging.DEBUG)
 
-# print(mcserver.fabric.game_versions())
-# print(mcserver.fabric.loader_versions())
-# print(mcserver.fabric.installer_versions())
-
-with mcserver.fabric.get_server_jar() as jar:
+with mcserver.fabric.get_server_jar(mcserver.fabric.get_best_version()) as jar:
     pass
 
