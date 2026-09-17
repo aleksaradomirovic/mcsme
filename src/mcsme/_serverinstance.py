@@ -21,7 +21,7 @@ import typing
 from ._serverloader import *
 
 class ServerInstance:
-    def __init__(self, directory, loader, *, server_properties: dict[str, typing.Any] = None):
+    def __init__(self, directory, loader):
         if directory is None:
             raise ValueError("directory cannot be null")
         self.__directory = pathlib.Path(directory)
@@ -32,26 +32,13 @@ class ServerInstance:
             raise TypeError("loader must be of type mcsme.ServerLoader")
         self.__loader = loader
 
-        if server_properties is None:
-            server_properties = {}
-        if not isinstance(server_properties, dict) or any([ not isinstance(k, str) for k in server_properties ]):
-            raise TypeError("server_properties must be a dict of strings")
-        self.__server_properties = server_properties.copy()
-
     def directory(self) -> pathlib.Path:
         return self.__directory
 
     def loader(self) -> ServerLoader:
         return self.__loader
 
-    def server_properties(self) -> dict[str, typing.Any]:
-        return self.__server_properties.copy()
-
     def run(self):
-        server_properties_str = { k: str(v) for k, v in self.server_properties().items() }
-        with open(self.directory() / "server.properties", "w") as f:
-            javaproperties.dump(server_properties_str, f)
-
         with open(self.directory() / "eula.txt", "w") as f:
             f.write("eula=true")
 
