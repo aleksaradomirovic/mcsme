@@ -29,6 +29,6 @@ class ServerLoader:
 
     def jar_file(self) -> pathlib.Path:
         return self.__jar_file
-    
+
     def game_version(self) -> str:
         return self.__game_version

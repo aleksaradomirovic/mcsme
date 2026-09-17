@@ -21,7 +21,7 @@ from ._serverloader import *
 def __retrieve_latest_versions():
     with open(mcsme.retrieve_file("fabric/versions.json", "https://meta.fabricmc.net/v2/versions"), "r") as f:
         versions = json.load(f)
-    
+
     return (
         [ v for v in versions["game"] if v["stable"] ][0]["version"],
         [ v for v in versions["loader"] if v["stable"] ][0]["version"],

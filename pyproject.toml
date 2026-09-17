@@ -7,5 +7,6 @@ name = "MCSME"
 version = "0.0.0"
 requires-python = ">=3.13"
 dependencies = [
-    "platformdirs>=4.3.0"
+    "platformdirs>=4.3.0",
+    "javaproperties>=0.8.0"
 ]
