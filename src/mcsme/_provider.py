@@ -25,6 +25,9 @@ __CACHE_ROOT = platformdirs.user_cache_path(appname="mcsme", ensure_exists=True)
 __CACHE_EXPIRE_TIMEOUT = 3000
 
 def retrieve_file(key, url) -> pathlib.Path:
+    if not file_url.startswith("https://"):
+        raise ValueError("files must be over https")
+
     request_time = time.time()
 
     key_path = __CACHE_ROOT / key
